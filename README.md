@@ -1,36 +1,16 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Samoyer面试刷题平台前端工程
 
-## Getting Started
+### 项目介绍
 
-First, run the development server:
+本项目是一个基于Next.js的前端工程，用于实现一个面试刷题平台。该平台提供了一套完整的面试刷题解决方案，包括题目管理、用户管理、答题记录等功能。
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### 脚手架
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Next.js：用于构建React应用
+- TypeScript：用于类型检查和代码提示
+- ESLint：用于代码规范检查
+- Prettier：用于代码格式化
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 组件库
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Ant Design：基于React，用于UI组件库
