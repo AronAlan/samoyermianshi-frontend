@@ -14,6 +14,8 @@ import { usePathname } from "next/navigation";
 import React from "react";
 import menus from "../../../config/menu";
 import "./index.css";
+import { useSelector } from "react-redux";
+import { RootState } from "@/stores";
 
 const SearchInput = () => {
     const { token } = theme.useToken();
@@ -70,6 +72,7 @@ const ProLayout = dynamic(
  */
 export default function BasicLayout({ children }: Props) {
     const pathname = usePathname();
+    const loginUser = useSelector((state: RootState) => state.loginUser);
     return (
         <div
             id="basicLayout"
@@ -94,9 +97,9 @@ export default function BasicLayout({ children }: Props) {
                     pathname
                 }}
                 avatarProps={{
-                    src: "/assets/布一.jpg",
+                    src: loginUser.userAvatar || "/assets/notlogin.png",
                     size: "small",
-                    title: "Samoyer",
+                    title: loginUser.userName || "未登录",
                     render: (props, dom) => {
                         return (
                             <Dropdown
