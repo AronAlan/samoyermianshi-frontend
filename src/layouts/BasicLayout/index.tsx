@@ -12,10 +12,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import menus from "../../../config/menu";
+import { menus } from "../../../config/menu";
 import "./index.css";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores";
+import getAccessibleMenus from "@/access/menuAccess";
 
 const SearchInput = () => {
     const { token } = theme.useToken();
@@ -151,7 +152,7 @@ export default function BasicLayout({ children }: Props) {
                 onMenuHeaderClick={(e) => console.log(e)}
                 // 菜单项数据
                 menuDataRender={() => {
-                    return menus;
+                    return getAccessibleMenus(loginUser, menus);
                 }}
                 // 菜单渲染
                 menuItemRender={(item, dom) => (
