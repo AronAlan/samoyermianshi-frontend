@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 import React, { useCallback, useEffect } from "react";
 import { Provider, useDispatch } from "react-redux";
 import "./globals.css";
+import { setLoginUser } from "@/stores/loginUser";
 
 /**
  * 初始化布局（多封装一层，使得能调用 useDispatch）
@@ -35,7 +36,7 @@ const InitLayout: React.FC<
         ) {
             if (res.data) {
                 //更新全局用户状态
-                // dispatch(setLoginUser(res.data));
+                dispatch(setLoginUser(res.data as API.LoginUserVO));
             } else {
                 // todo 测试代码，实际可删除
                 // setTimeout(() => {

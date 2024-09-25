@@ -1,24 +1,25 @@
 "use client";
 
+import getAccessibleMenus from "@/access/menuAccess";
+import { userLogoutUsingPost } from "@/api/userController";
 import GlobalFooter from "@/components/GlobalFooter";
+import { DEFAULT_USER } from "@/constants/user";
+import { AppDispatch, RootState } from "@/stores";
+import { setLoginUser } from "@/stores/loginUser";
 import {
     GithubFilled,
     LogoutOutlined,
     SearchOutlined
 } from "@ant-design/icons";
-import { Dropdown, Input, theme } from "antd";
+import { Dropdown, Input, message, theme } from "antd";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import React, { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { menus } from "../../../config/menu";
 import "./index.css";
-import { useSelector } from "react-redux";
-import { RootState } from "@/stores";
-import getAccessibleMenus from "@/access/menuAccess";
-import MdEditor from "@/compoents/MdEditor";
-import MdViewer from "@/compoents/MdViewer";
 
 const SearchInput = () => {
     const { token } = theme.useToken();
@@ -76,7 +77,22 @@ const ProLayout = dynamic(
 export default function BasicLayout({ children }: Props) {
     const pathname = usePathname();
     const loginUser = useSelector((state: RootState) => state.loginUser);
-    const [text, setText] = useState<string>("");
+    const router = useRouter();
+    const dispatch = useDispatch<AppDispatch>();
+
+    /**
+     * 用户注销
+     */
+    const userLogout = async () => {
+        try {
+            await userLogoutUsingPost();
+            message.success("已退出登录");
+            dispatch(setLoginUser(DEFAULT_USER));
+            router.push("/user/login");
+        } catch (e: any) {
+            message.error("注销失败，" + e.message);
+        }
+    };
 
     return (
         <div
@@ -106,6 +122,13 @@ export default function BasicLayout({ children }: Props) {
                     size: "small",
                     title: loginUser.userName || "未登录",
                     render: (props, dom) => {
+                        if (!loginUser.id) {
+                            return (
+                                <div onClick={() => router.push("/user/login")}>
+                                    {dom}
+                                </div>
+                            );
+                        }
                         return (
                             <Dropdown
                                 menu={{
@@ -113,14 +136,17 @@ export default function BasicLayout({ children }: Props) {
                                         {
                                             key: "logout",
                                             icon: <LogoutOutlined />,
-                                            label: "测试按钮"
-                                        },
-                                        {
-                                            key: "logout",
-                                            icon: <LogoutOutlined />,
                                             label: "退出登录"
                                         }
-                                    ]
+                                    ],
+                                    onClick: async (event: {
+                                        key: React.Key;
+                                    }) => {
+                                        const { key } = event;
+                                        if (key === "logout") {
+                                            userLogout();
+                                        }
+                                    }
                                 }}
                             >
                                 {dom}
@@ -165,8 +191,6 @@ export default function BasicLayout({ children }: Props) {
                     </Link>
                 )}
             >
-                <MdEditor value={text} onChange={setText} />
-                <MdViewer value={text} />
                 {children}
             </ProLayout>
         </div>
