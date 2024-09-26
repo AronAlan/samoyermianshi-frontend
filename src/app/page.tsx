@@ -5,5 +5,5 @@ import "./index.css";
  * @returns
  */
 export default function HomePage() {
-    return <div id="homePage">主页页面</div>;
+    return <div id="homePage">欢迎来到面试熊刷题平台</div>;
 }

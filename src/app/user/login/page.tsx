@@ -47,16 +47,16 @@ const UserLoginPage: React.FC = (props) => {
                 form={form}
                 logo={
                     <Image
-                        src="/assets/samoye.png"
-                        alt="samoye"
+                        src="/assets/bubu.jpeg"
+                        alt="bubu"
                         width={44}
                         height={44}
                     />
                 }
-                title="用户登录"
+                title="面试熊 - 用户登录"
                 subTitle={
                     <>
-                        Samoyer面试刷题平台
+                        面试熊刷题平台
                         <br />
                         <br />
                         雄关漫道真如铁,而今迈步从头越

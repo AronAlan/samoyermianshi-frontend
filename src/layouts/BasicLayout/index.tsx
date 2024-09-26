@@ -103,15 +103,15 @@ export default function BasicLayout({ children }: Props) {
             }}
         >
             <ProLayout
-                title="Samoyer面试刷题平台"
+                title="面试熊刷题平台"
                 layout="top"
                 logo={
                     <Image
-                        src="/assets/samoye.png"
+                        src="/assets/bubu.jpeg"
                         //设置图片大小
                         width={32}
                         height={32}
-                        alt="Samoyer面试刷题平台 - 程序员Samoyer"
+                        alt="面试熊刷题平台 - 程序员Samoyer"
                     />
                 }
                 location={{
