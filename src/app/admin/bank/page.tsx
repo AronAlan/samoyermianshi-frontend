@@ -1,23 +1,23 @@
 "use client";
 
-import CreateModal from "./components/CreateModal";
-import UpdateModal from "./components/UpdateModal";
 import {
-    deleteUserUsingPost,
-    listUserByPageUsingPost
-} from "@/api/userController";
+    deleteQuestionBankUsingPost,
+    listQuestionBankByPageUsingPost
+} from "@/api/questionBankController";
 import { PlusOutlined } from "@ant-design/icons";
 import type { ActionType, ProColumns } from "@ant-design/pro-components";
 import { PageContainer, ProTable } from "@ant-design/pro-components";
 import { Button, message, Popconfirm, Space, Typography } from "antd";
 import React, { useRef, useState } from "react";
+import CreateModal from "./components/CreateModal";
+import UpdateModal from "./components/UpdateModal";
 
 /**
- * 用户管理页面
+ * 题库管理页面
  *
  * @constructor
  */
-const UserAdminPage: React.FC = () => {
+const BankAdminPage: React.FC = () => {
     // 是否显示新建窗口
     const [createModalVisible, setCreateModalVisible] =
         useState<boolean>(false);
@@ -26,7 +26,7 @@ const UserAdminPage: React.FC = () => {
         useState<boolean>(false);
     const actionRef = useRef<ActionType>();
     // 当前用户点击的数据
-    const [currentRow, setCurrentRow] = useState<API.User>();
+    const [currentRow, setCurrentRow] = useState<API.QuestionBank>();
     // 用于删除数据后当前页没有数据了，则返回表格上一页
     const [currentPageTotal, setCurrentPageTotal] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<boolean>(false);
@@ -36,11 +36,11 @@ const UserAdminPage: React.FC = () => {
      *
      * @param row
      */
-    const handleDelete = async (row: API.User) => {
+    const handleDelete = async (row: API.QuestionBank) => {
         const hide = message.loading("正在删除");
         if (!row) return true;
         try {
-            await deleteUserUsingPost({
+            await deleteQuestionBankUsingPost({
                 id: row.id as any
             });
             hide();
@@ -63,7 +63,7 @@ const UserAdminPage: React.FC = () => {
     /**
      * 表格列配置
      */
-    const columns: ProColumns<API.User>[] = [
+    const columns: ProColumns<API.QuestionBank>[] = [
         {
             title: "id",
             dataIndex: "id",
@@ -71,18 +71,18 @@ const UserAdminPage: React.FC = () => {
             hideInForm: true
         },
         {
-            title: "账号",
-            dataIndex: "userAccount",
+            title: "标题",
+            dataIndex: "title",
             valueType: "text"
         },
         {
-            title: "用户名",
-            dataIndex: "userName",
+            title: "描述",
+            dataIndex: "description",
             valueType: "text"
         },
         {
-            title: "头像",
-            dataIndex: "userAvatar",
+            title: "图片",
+            dataIndex: "picture",
             valueType: "image",
             fieldProps: {
                 width: 64
@@ -90,26 +90,17 @@ const UserAdminPage: React.FC = () => {
             hideInSearch: true
         },
         {
-            title: "简介",
-            dataIndex: "userProfile",
-            valueType: "textarea"
-        },
-        {
-            title: "权限",
-            dataIndex: "userRole",
-            valueEnum: {
-                user: {
-                    text: "用户"
-                },
-                admin: {
-                    text: "管理员"
-                }
-            }
-        },
-        {
             title: "创建时间",
             sorter: true,
             dataIndex: "createTime",
+            valueType: "dateTime",
+            hideInSearch: true,
+            hideInForm: true
+        },
+        {
+            title: "编辑时间",
+            sorter: true,
+            dataIndex: "editTime",
             valueType: "dateTime",
             hideInSearch: true,
             hideInForm: true
@@ -150,7 +141,7 @@ const UserAdminPage: React.FC = () => {
     ];
     return (
         <PageContainer>
-            <ProTable<API.User>
+            <ProTable<API.QuestionBank>
                 headerTitle={"查询表格"}
                 actionRef={actionRef}
                 rowKey="id"
@@ -178,21 +169,14 @@ const UserAdminPage: React.FC = () => {
                         setCurrentPage(false);
                     }
 
-                    // 不加 as any的话，会报类型错误，但不影响运行
-                    // 因为TS并不知道返回结果里有没有这两个属性，因此我们要让TS知道是有这两个属性的，所以可以直接使用断言解决。
-                    /*const { data, code } = (await listUserByPageUsingPost({
-                        ...params,
-                        sortField,
-                        sortOrder,
-                        ...filter
-                    } as API.UserQueryRequest));*/
-
-                    const { data, code } = (await listUserByPageUsingPost({
-                        ...params,
-                        sortField,
-                        sortOrder,
-                        ...filter
-                    } as API.UserQueryRequest)) as any;
+                    const { data, code } =
+                        (await listQuestionBankByPageUsingPost({
+                            ...params,
+                            sortField,
+                            sortOrder,
+                            ...filter
+                        } as API.QuestionBankQueryRequest)) as any;
+                    setCurrentPageTotal(Number(data?.total) || 0); // 设置当前页的数据总数
                     return {
                         success: code === 0,
                         data: data?.records || [],
@@ -228,4 +212,4 @@ const UserAdminPage: React.FC = () => {
         </PageContainer>
     );
 };
-export default UserAdminPage;
+export default BankAdminPage;

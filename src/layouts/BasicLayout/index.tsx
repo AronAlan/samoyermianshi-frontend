@@ -2,7 +2,7 @@
 
 import getAccessibleMenus from "@/access/menuAccess";
 import { userLogoutUsingPost } from "@/api/userController";
-import GlobalFooter from "@/components/GlobalFooter";
+import GlobalFooter from "@/compoents/GlobalFooter";
 import { DEFAULT_USER } from "@/constants/user";
 import { AppDispatch, RootState } from "@/stores";
 import { setLoginUser } from "@/stores/loginUser";

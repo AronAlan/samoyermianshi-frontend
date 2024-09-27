@@ -39,6 +39,7 @@ export default async function HomePage() {
     }
     return (
         <div id="homePage" className="max-width-content">
+            {/* 增加一个公告栏，也可以加个banner图片 */}
             <Card
                 style={{
                     borderRadius: 8
@@ -52,7 +53,7 @@ export default async function HomePage() {
                             textAlign: "center"
                         }}
                     >
-                        ❤️欢迎使用 面试熊刷题平台❤️
+                        ❤️欢迎使用 Samoyer API开放接口平台❤️
                     </div>
                     <p
                         style={{
@@ -63,8 +64,8 @@ export default async function HomePage() {
                             textAlign: "center"
                         }}
                     >
-                        🚀 面试熊刷题平台
-                        提供丰富的面试题目，帮您快速找到最合适的题目，帮您快速了解题目知识点
+                        🚀 Samoyer API开放接口平台
+                        提供API接口供开发者调用的平台，用户可以注册登录，浏览接口并调用
                         🚀
                     </p>
                     <p
@@ -75,19 +76,7 @@ export default async function HomePage() {
                             textAlign: "center"
                         }}
                     >
-                        🌐 致力于为用户提供热门面试题 🌐
-                    </p>
-                    <p
-                        style={{
-                            fontSize: "30px",
-                            color: "black",
-                            lineHeight: "40px",
-                            marginTop: 30,
-                            textAlign: "center",
-                            fontFamily: "ZoomlaWenzhengming-A064" // 使用自定义字体
-                        }}
-                    >
-                        雄关漫道真如铁，而今迈步从头越
+                        🌐 致力于为用户提供稳定、快速的免费API数据接口服务 🌐
                     </p>
                     <p
                         style={{
@@ -97,7 +86,7 @@ export default async function HomePage() {
                             textAlign: "center"
                         }}
                     >
-                        在法律允许的范围内，在此声明，本平台仅用于交流学习，不用于商业用途。不承担用户或任何人士因本网站所提供的信息或任何链接所引致的任何直接、间接、附带、从属、特殊、惩罚性或惩戒性的损害赔偿（包括但不限于收益、预期利润的损失或失去的业务）。
+                        在法律允许的范围内，本网站在此声明,不承担用户或任何人士就使用或未能使用本网站所提供的信息或任何链接或项目所引致的任何直接、间接、附带、从属、特殊、惩罚性或惩戒性的损害赔偿（包括但不限于收益、预期利润的损失或失去的业务、未实现预期的节省）。
                     </p>
                     <p
                         style={{
@@ -106,21 +95,17 @@ export default async function HomePage() {
                             textAlign: "center"
                         }}
                     >
-                        本网站图片，题目和答案，皆源于互联网，由作者整理，如果侵犯，请及时通知我们，本网站将在第一时间及时删除。
+                        本网站图片，文字，接口信息之类版权申明，皆来自于互联网，如果侵犯，请及时通知我们，本网站将在第一时间及时删除。
                     </p>
                 </div>
             </Card>
-
             <Divider />
-
             <Flex justify="space-between" align="center">
                 <Title level={3}>最新题库</Title>
                 <Link href={"/banks"}>查看更多</Link>
             </Flex>
             <QuestionBankList questionBankList={questionBankList} />
-
             <Divider />
-
             <Flex justify="space-between" align="center">
                 <Title level={3}>最新题目</Title>
                 <Link href={"/questions"}>查看更多</Link>

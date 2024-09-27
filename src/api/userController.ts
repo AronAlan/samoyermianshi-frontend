@@ -81,7 +81,6 @@ export async function listUserByPageUsingPost(
     ...(options || {}),
   });
 }
-
 /** listUserVOByPage POST /api/user/list/page/vo */
 export async function listUserVoByPageUsingPost(
   body: API.UserQueryRequest,

@@ -1,11 +1,49 @@
 * {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
 }
 
 html,
 body {
-  max-width: 100vw;
-  max-height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
+    font-family: "ZoomlaWenzhengming-A064";
 }
+
+.max-width-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 逐浪文征明吴门狂草书 */
+@font-face {
+    font-family: "ZoomlaWenzhengming-A064";
+    src: url("https://code.z01.com/font/ZoomlaWenzhengming-A064.eot?#iefix");
+    src:
+        url("https://code.z01.com/font/ZoomlaWenzhengming-A064.eot?#iefix")
+            format("embedded-opentype"),
+        url("https://code.z01.com/font/ZoomlaWenzhengming-A064.woff")
+            format("woff"),
+        url("https://code.z01.com/font/ZoomlaWenzhengming-A064.ttf")
+            format("truetype"),
+        url("https://code.z01.com/font/ZoomlaWenzhengming-A064.svg#ZoomlaWenzhengming-A064")
+            format("svg");
+    font-style: normal;
+    font-weight: normal;
+}
+
+/* 伟人毛体 */
+/* @font-face {
+    font-family: "ZoomlaXingtiJ6";
+    src: url("https://code.z01.com/font/ZoomlaXingtiJ6.eot?#iefix");
+    src:
+        url("https://code.z01.com/font/ZoomlaXingtiJ6.eot?#iefix")
+            format("embedded-opentype"),
+        url("https://code.z01.com/font/ZoomlaXingtiJ6.woff") format("woff"),
+        url("https://code.z01.com/font/ZoomlaXingtiJ6.ttf") format("truetype"),
+        url("https://code.z01.com/font/ZoomlaXingtiJ6.svg#ZoomlaXingtiJ6")
+            format("svg");
+    font-style: normal;
+    font-weight: normal;
+} */
