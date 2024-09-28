@@ -6,56 +6,17 @@ import GlobalFooter from "@/compoents/GlobalFooter";
 import { DEFAULT_USER } from "@/constants/user";
 import { AppDispatch, RootState } from "@/stores";
 import { setLoginUser } from "@/stores/loginUser";
-import {
-    GithubFilled,
-    LogoutOutlined,
-    SearchOutlined
-} from "@ant-design/icons";
-import { Dropdown, Input, message, theme } from "antd";
+import { GithubFilled, LogoutOutlined } from "@ant-design/icons";
+import { Dropdown, message } from "antd";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { menus } from "../../../config/menu";
 import "./index.css";
-
-const SearchInput = () => {
-    const { token } = theme.useToken();
-    return (
-        <div
-            key="SearchOutlined"
-            aria-hidden
-            style={{
-                display: "flex",
-                alignItems: "center",
-                marginInlineEnd: 24
-            }}
-            onMouseDown={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-            }}
-        >
-            <Input
-                style={{
-                    borderRadius: 4,
-                    marginInlineEnd: 12,
-                    backgroundColor: token.colorBgTextHover
-                }}
-                prefix={
-                    <SearchOutlined
-                        style={{
-                            color: token.colorTextLightSolid
-                        }}
-                    />
-                }
-                placeholder="搜索题目"
-                variant="borderless"
-            />
-        </div>
-    );
-};
+import SearchInput from "./components/SearchInput";
 
 interface Props {
     children: React.ReactNode;
@@ -77,7 +38,7 @@ const ProLayout = dynamic(
 export default function BasicLayout({ children }: Props) {
     const pathname = usePathname();
     const loginUser = useSelector((state: RootState) => state.loginUser);
-    const router = useRouter();
+    const router = useRouter() as any;
     const dispatch = useDispatch<AppDispatch>();
 
     /**
@@ -157,7 +118,9 @@ export default function BasicLayout({ children }: Props) {
                 actionsRender={(props) => {
                     if (props.isMobile) return [];
                     return [
-                        <SearchInput key="search" />,
+                        ...(pathname.includes("/questions")
+                            ? []
+                            : [<SearchInput key="search" />]),
                         <a
                             key="github"
                             href="https://github.com/AronAlan/samoyermianshi-frontend"

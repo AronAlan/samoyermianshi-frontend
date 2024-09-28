@@ -2,6 +2,7 @@
 import { Card, List, Tag } from "antd";
 import "./index.css";
 import Link from "next/link";
+import TagList from "../TagList";
 
 interface Props {
     questionList: API.QuestionVO[];
@@ -14,10 +15,26 @@ interface Props {
  */
 const QuestionList = (props: Props) => {
     const { questionList = [] } = props;
+    const colors = [
+        "red",
+        "blue",
+        "green",
+        "yellow",
+        "orange",
+        "purple",
+        "pink",
+        "cyan",
+        "gold",
+        "magenta"
+    ];
 
+    function getRandomColor(): string {
+        const index = Math.floor(Math.random() * colors.length);
+        return colors[index];
+    }
     const tagList = (tags: string[] = []) => {
         return tags.map((tag) => {
-            return <Tag key={tag}>{tag}</Tag>;
+            return <Tag key={tag} color={getRandomColor()}>{tag}</Tag>;
         });
     };
 

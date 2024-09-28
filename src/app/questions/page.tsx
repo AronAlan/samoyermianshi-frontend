@@ -1,28 +1,45 @@
-"use client";
-
-import { useSelector } from "react-redux";
+"use server";
+import Title from "antd/es/typography/Title";
 import "./index.css";
-import { RootState } from "@/stores";
-import { useRouter } from "next/navigation";
-import { message } from "antd";
-import ACCESS_ENUM from "@/access/accessEnum";
+import QuestionTable from "./compoents/QuestionTable";
+import { listQuestionSimpleVoByPageUsingPost } from "@/api/questionController";
 
 /**
- * 题目页面
- * @returns
+ * 题目列表页面
+ * @constructor
  */
-export default function questionsPage() {
-    const loginUser = useSelector((state: RootState) => state.loginUser);
-    const router = useRouter();
+export default async function QuestionsPage({ searchParams }: any) {
+    const { q: searchText } = searchParams;
+    let questionList = [];
+    let total = 0;
 
-    if (loginUser.userRole === ACCESS_ENUM.NOT_LOGIN) {
-        message.warning("期待您登录后的使用~");
-        router.push("/user/login"); // 跳转到登录页面
+    try {
+        const questionRes = (await listQuestionSimpleVoByPageUsingPost({
+            title: searchText,
+            pageSize: 15,
+            sortField: "createTime",
+            sortOrder: "descend"
+        })) as any;
+        questionList = questionRes.data.records ?? [];
+        total = questionRes.data.total ?? 0;
+    } catch (e: any) {
+        console.error("获取题目列表失败，" + e.message);
+    }
+
+    if (typeof window !== "undefined") {
+        console.log(window["__NEXT_DATA__"]);
     }
 
     return (
-        <div id="questionsPage">
-            <h1>题目页面</h1>
+        <div id="questionsPage" className="max-width-content">
+            <Title level={3}>题目大全</Title>
+            <QuestionTable
+                defaultQuestionList={questionList}
+                defaultTotal={total}
+                defaultSearchParams={{
+                    title: searchText
+                }}
+            />
         </div>
     );
 }

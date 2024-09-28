@@ -77,6 +77,21 @@ export async function listQuestionByPageUsingPost(
   });
 }
 
+/** listQuestionSimpleVOByPage POST /api/question/list/page/svo */
+export async function listQuestionSimpleVoByPageUsingPost(
+  body: API.QuestionQueryRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponsePageQuestionSimpleVO_>('/api/question/list/page/svo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** listQuestionVOByPage POST /api/question/list/page/vo */
 export async function listQuestionVoByPageUsingPost(
   body: API.QuestionQueryRequest,

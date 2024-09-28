@@ -32,7 +32,9 @@ const QuestionBankList = (props: Props) => {
                         <Card>
                             <Link href={`/bank/${questionBank.id}`}>
                                 <Card.Meta
-                                    avatar={<Avatar src={questionBank.picture} />}
+                                    avatar={
+                                        <Avatar src={questionBank.picture} />
+                                    }
                                     title={questionBank.title}
                                     description={
                                         <Typography.Paragraph

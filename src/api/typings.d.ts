@@ -65,6 +65,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponsePageQuestionSimpleVO_ = {
+    code?: number;
+    data?: PageQuestionSimpleVO_;
+    message?: string;
+  };
+
   type BaseResponsePageQuestionVO_ = {
     code?: number;
     data?: PageQuestionVO_;
@@ -281,6 +287,19 @@ declare namespace API {
     orders?: OrderItem[];
     pages?: number;
     records?: QuestionBankVO[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
+  };
+
+  type PageQuestionSimpleVO_ = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: QuestionSimpleVO[];
     searchCount?: boolean;
     size?: number;
     total?: number;
@@ -553,6 +572,15 @@ declare namespace API {
     sortOrder?: string;
     tags?: string[];
     title?: string;
+    userId?: number;
+  };
+
+  type QuestionSimpleVO = {
+    createTime?: string;
+    id?: number;
+    tagList?: string[];
+    title?: string;
+    updateTime?: string;
     userId?: number;
   };
 
