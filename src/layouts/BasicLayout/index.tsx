@@ -17,19 +17,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { menus } from "../../../config/menu";
 import "./index.css";
 import SearchInput from "./components/SearchInput";
+import { ProLayout } from "@ant-design/pro-components";
 
 interface Props {
     children: React.ReactNode;
 }
 
-const ProLayout = dynamic(
-    () => {
-        return import("@ant-design/pro-layout");
-    },
-    {
-        ssr: false //仅在客户端渲染
-    }
-);
+// 虽然能解决其中一个水合报错，但会影响服务端渲染，预览中无法查看
+// const ProLayout = dynamic(
+//     () => {
+//         return import("@ant-design/pro-layout");
+//     },
+//     {
+//         ssr: false //仅在客户端渲染
+//     }
+// );
 
 /**
  * 全局通用布局

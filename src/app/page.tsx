@@ -1,4 +1,3 @@
-"use server";
 import { listQuestionBankVoByPageUsingPost } from "@/api/questionBankController";
 import { listQuestionVoByPageUsingPost } from "@/api/questionController";
 import QuestionBankList from "@/compoents/QuestionBankList";
@@ -7,6 +6,9 @@ import { Card, Divider, Flex } from "antd";
 import Title from "antd/es/typography/Title";
 import Link from "next/link";
 import "./index.css";
+
+// 本页面使用服务端渲染，禁用静态生成
+export const dynamic = "force-dynamic";
 
 /**
  * 主页
