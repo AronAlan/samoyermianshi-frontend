@@ -13,6 +13,7 @@ import CreateModal from "./components/CreateModal";
 import UpdateModal from "./components/UpdateModal";
 import TagList from "../../../compoents/TagList";
 import MdEditor from "@/compoents/MdEditor";
+import UpdateBankModal from "./components/UpdateBankModal";
 
 /**
  * 题库管理页面
@@ -32,6 +33,9 @@ const BankAdminPage: React.FC = () => {
     // 用于删除数据后当前页没有数据了，则返回表格上一页
     const [currentPageTotal, setCurrentPageTotal] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<boolean>(false);
+    // 是否显示更新所属题库的弹窗
+    const [updateBankModalVisible, setUpdateBankModalVisible] =
+        useState<boolean>(false);
 
     /**
      * 删除节点
@@ -78,6 +82,12 @@ const BankAdminPage: React.FC = () => {
             valueType: "text"
         },
         {
+            title: "所属题库",
+            dataIndex: "questionBankId",
+            hideInTable: true,
+            hideInForm: true
+        },
+        {
             title: "内容",
             dataIndex: "content",
             valueType: "text",
@@ -92,7 +102,7 @@ const BankAdminPage: React.FC = () => {
                     formItemProps,
                     fieldProps,
                     ...rest
-                } : any, //加个any，否则会报错（vscode报）
+                }: any, //加个any，否则会报错（vscode报）
                 form
             ) => {
                 return (
@@ -109,7 +119,21 @@ const BankAdminPage: React.FC = () => {
             dataIndex: "answer",
             valueType: "text",
             hideInSearch: true,
-            width: 640
+            width: 640,
+            //修改数据时，将此项的输入框变为markdown
+            renderFormItem: (
+                _,
+                {
+                    type,
+                    defaultRender,
+                    formItemProps,
+                    fieldProps,
+                    ...rest
+                }: any,
+                form
+            ) => {
+                return <MdEditor {...fieldProps} />;
+            }
         },
         {
             title: "标签",
@@ -168,6 +192,14 @@ const BankAdminPage: React.FC = () => {
                         }}
                     >
                         修改
+                    </Typography.Link>
+                    <Typography.Link
+                        onClick={() => {
+                            setCurrentRow(record);
+                            setUpdateBankModalVisible(true);
+                        }}
+                    >
+                        修改所属题库
                     </Typography.Link>
                     <Popconfirm
                         title="确认删除?"
@@ -248,6 +280,14 @@ const BankAdminPage: React.FC = () => {
                 }}
                 onCancel={() => {
                     setUpdateModalVisible(false);
+                }}
+            />
+            <UpdateBankModal
+                visible={updateBankModalVisible}
+                questionId={currentRow?.id}
+                onCancel={() => {
+                    setCurrentRow(undefined);
+                    setUpdateBankModalVisible(false);
                 }}
             />
         </PageContainer>

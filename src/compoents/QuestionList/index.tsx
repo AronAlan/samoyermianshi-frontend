@@ -1,11 +1,13 @@
 "use client";
 import { Card, List, Tag } from "antd";
-import "./index.css";
 import Link from "next/link";
+import "./index.css";
 import TagList from "../TagList";
 
 interface Props {
+    cardTitle?: React.ReactNode;
     questionList: API.QuestionVO[];
+    questionBankId?: number;
 }
 
 /**
@@ -14,39 +16,23 @@ interface Props {
  * @constructor
  */
 const QuestionList = (props: Props) => {
-    const { questionList = [] } = props;
-    const colors = [
-        "red",
-        "blue",
-        "green",
-        "yellow",
-        "orange",
-        "purple",
-        "pink",
-        "cyan",
-        "gold",
-        "magenta"
-    ];
-
-    function getRandomColor(): string {
-        const index = Math.floor(Math.random() * colors.length);
-        return colors[index];
-    }
-    const tagList = (tags: string[] = []) => {
-        return tags.map((tag) => {
-            return <Tag key={tag} color={getRandomColor()}>{tag}</Tag>;
-        });
-    };
+    const { questionList = [], cardTitle, questionBankId } = props;
 
     return (
-        <Card className="question-list">
+        <Card className="question-list" title={cardTitle}>
             <List
                 dataSource={questionList}
                 renderItem={(item: API.QuestionVO) => (
-                    <List.Item extra={tagList(item.tagList)}>
+                    <List.Item extra={<TagList tagList={item.tagList} />}>
                         <List.Item.Meta
                             title={
-                                <Link href={`/question/${item.id}`}>
+                                <Link
+                                    href={
+                                        questionBankId
+                                            ? `/bank/${questionBankId}/question/${item.id}`
+                                            : `/question/${item.id}`
+                                    }
+                                >
                                     {item.title}
                                 </Link>
                             }

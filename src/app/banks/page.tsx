@@ -14,13 +14,13 @@ export default async function BanksPage() {
     // 题库数量不多，直接全量获取
     const pageSize = 200;
     try {
-        const res = await listQuestionBankVoByPageUsingPost({
+        const res = (await listQuestionBankVoByPageUsingPost({
             pageSize,
             sortField: "createTime",
             sortOrder: "descend"
-        });
+        })) as any;
         questionBankList = res.data.records ?? [];
-    } catch (e) {
+    } catch (e: any) {
         message.error("获取题库列表失败，" + e.message);
     }
 

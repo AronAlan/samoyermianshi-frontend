@@ -21,7 +21,11 @@ interface Props {
  */
 export default function QuestionTable(props: Props) {
     const actionRef = useRef<ActionType>();
-    const { defaultQuestionList, defaultTotal, defaultSearchParams={} } = props;
+    const {
+        defaultQuestionList,
+        defaultTotal,
+        defaultSearchParams = {}
+    } = props;
     const [questionList, setQuestionList] = useState<API.QuestionSimpleVO[]>(
         defaultQuestionList || []
     );
@@ -88,8 +92,8 @@ export default function QuestionTable(props: Props) {
                         }
                     }
 
-                    const sortField = Object.keys(sort)?.[0];
-                    const sortOrder = sort?.[sortField];
+                    const sortField = Object.keys(sort)?.[0] || "createTime";
+                    const sortOrder = sort?.[sortField] || "descend";
                     // 请求
                     const { data, code } =
                         (await listQuestionSimpleVoByPageUsingPost({
