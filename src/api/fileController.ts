@@ -32,13 +32,13 @@ export async function uploadFileUsingPost(
     }
   });
 
-  // return request<API.BaseResponseString_>('/api/file/upload', {
-  //   method: 'POST',
-  //   params: {
-  //     ...params,
-  //   },
-  //   data: formData,
-  //   requestType: 'form',
-  //   ...(options || {}),
-  // });
+  return request<API.BaseResponseString_>('/api/file/upload', {
+    method: 'POST',
+    params: {
+      ...params,
+    },
+    data: formData,
+    requestType: 'form',
+    ...(options || {}),
+  });
 }

@@ -1,9 +1,9 @@
 import { Viewer } from "@bytemd/react";
 import gfm from "@bytemd/plugin-gfm";
-import highlight from "@bytemd/plugin-highlight";
 import "bytemd/dist/index.css";
 import "highlight.js/styles/vs.css";
 import "./index.css";
+import highlight from "@bytemd/plugin-highlight";
 import "github-markdown-css/github-markdown-light.css";
 
 interface Props {

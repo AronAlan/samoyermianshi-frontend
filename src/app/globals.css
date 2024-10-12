@@ -32,18 +32,3 @@ body {
     font-style: normal;
     font-weight: normal;
 }
-
-/* 伟人毛体 */
-/* @font-face {
-    font-family: "ZoomlaXingtiJ6";
-    src: url("https://code.z01.com/font/ZoomlaXingtiJ6.eot?#iefix");
-    src:
-        url("https://code.z01.com/font/ZoomlaXingtiJ6.eot?#iefix")
-            format("embedded-opentype"),
-        url("https://code.z01.com/font/ZoomlaXingtiJ6.woff") format("woff"),
-        url("https://code.z01.com/font/ZoomlaXingtiJ6.ttf") format("truetype"),
-        url("https://code.z01.com/font/ZoomlaXingtiJ6.svg#ZoomlaXingtiJ6")
-            format("svg");
-    font-style: normal;
-    font-weight: normal;
-} */

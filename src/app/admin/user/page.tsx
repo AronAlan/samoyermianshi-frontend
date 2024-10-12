@@ -151,7 +151,7 @@ const UserAdminPage: React.FC = () => {
     return (
         <PageContainer>
             <ProTable<API.User>
-                headerTitle={"查询表格"}
+                headerTitle={"用户详情"}
                 actionRef={actionRef}
                 rowKey="id"
                 search={{

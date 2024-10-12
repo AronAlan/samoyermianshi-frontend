@@ -142,7 +142,7 @@ const BankAdminPage: React.FC = () => {
     return (
         <PageContainer>
             <ProTable<API.QuestionBank>
-                headerTitle={"查询表格"}
+                headerTitle={"题库详情"}
                 actionRef={actionRef}
                 rowKey="id"
                 search={{

@@ -1,11 +1,14 @@
 "use client";
 
 import ProTable, { ActionType, ProColumns } from "@ant-design/pro-table";
-import { TablePaginationConfig } from "antd";
+import { message, TablePaginationConfig } from "antd";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import TagList from "../../../../compoents/TagList";
-import { listQuestionSimpleVoByPageUsingPost } from "@/api/questionController";
+import {
+    listQuestionSimpleVoByPageUsingPost,
+    searchQuestionSimpleVoByPageUsingPost
+} from "@/api/questionController";
 
 interface Props {
     //默认值，用于展示服务端渲染的数据
@@ -37,8 +40,21 @@ export default function QuestionTable(props: Props) {
      */
     const columns: ProColumns<API.QuestionSimpleVO>[] = [
         {
+            title: "搜索题目",
+            dataIndex: "searchText",
+            valueType: "text",
+            hideInTable: true,
+            render(_, record) {
+                return (
+                    <Link href={`/question/${record.id}`}>{record.title}</Link>
+                );
+            }
+        },
+        {
             title: "题目",
             dataIndex: "title",
+            valueType: "text",
+            hideInSearch: true,
             render(_, record) {
                 return (
                     <Link href={`/question/${record.id}`}>{record.title}</Link>
@@ -47,7 +63,7 @@ export default function QuestionTable(props: Props) {
         },
         {
             title: "标签",
-            dataIndex: "tagList",
+            dataIndex: "tags",
             valueType: "select",
             fieldProps: {
                 mode: "tags"
@@ -92,11 +108,11 @@ export default function QuestionTable(props: Props) {
                         }
                     }
 
-                    const sortField = Object.keys(sort)?.[0] || "createTime";
+                    const sortField = Object.keys(sort)?.[0] || "updateTime";
                     const sortOrder = sort?.[sortField] || "descend";
                     // 请求
                     const { data, code } =
-                        (await listQuestionSimpleVoByPageUsingPost({
+                        (await searchQuestionSimpleVoByPageUsingPost({
                             ...params,
                             sortField,
                             sortOrder,

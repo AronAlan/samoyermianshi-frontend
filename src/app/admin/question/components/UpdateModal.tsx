@@ -63,7 +63,7 @@ const UpdateModal: React.FC<Props> = (props) => {
                 form={{
                     initialValues: initialValues
                 }}
-                onSubmit={async (values: API.QuestionAddRequest) => {
+                onSubmit={async (values: API.QuestionUpdateRequest) => {
                     const success = await handleUpdate({
                         ...values,
                         id: oldData.id as any

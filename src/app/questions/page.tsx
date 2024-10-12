@@ -2,7 +2,10 @@
 import Title from "antd/es/typography/Title";
 import "./index.css";
 import QuestionTable from "./compoents/QuestionTable";
-import { listQuestionSimpleVoByPageUsingPost } from "@/api/questionController";
+import {
+    listQuestionSimpleVoByPageUsingPost,
+    searchQuestionSimpleVoByPageUsingPost
+} from "@/api/questionController";
 
 /**
  * 题目列表页面
@@ -14,10 +17,10 @@ export default async function QuestionsPage({ searchParams }: any) {
     let total = 0;
 
     try {
-        const questionRes = (await listQuestionSimpleVoByPageUsingPost({
+        const questionRes = (await searchQuestionSimpleVoByPageUsingPost({
             title: searchText,
             pageSize: 15,
-            sortField: "createTime",
+            sortField: "updateTime",
             sortOrder: "descend"
         })) as any;
         questionList = questionRes.data.records ?? [];

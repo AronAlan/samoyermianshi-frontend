@@ -1,23 +1,25 @@
 "use client";
 
 import getAccessibleMenus from "@/access/menuAccess";
-import { userLogoutUsingPost } from "@/api/userController";
+import {
+    addUserSignInUsingPost,
+    userLogoutUsingPost
+} from "@/api/userController";
 import GlobalFooter from "@/compoents/GlobalFooter";
 import { DEFAULT_USER } from "@/constants/user";
 import { AppDispatch, RootState } from "@/stores";
 import { setLoginUser } from "@/stores/loginUser";
-import { GithubFilled, LogoutOutlined } from "@ant-design/icons";
-import { Dropdown, message } from "antd";
-import dynamic from "next/dynamic";
+import { GithubFilled, LogoutOutlined, UserOutlined } from "@ant-design/icons";
+import { ProLayout } from "@ant-design/pro-components";
+import { Button, Dropdown, message } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { menus } from "../../../config/menu";
-import "./index.css";
 import SearchInput from "./components/SearchInput";
-import { ProLayout } from "@ant-design/pro-components";
+import "./index.css";
 
 interface Props {
     children: React.ReactNode;
@@ -54,6 +56,21 @@ export default function BasicLayout({ children }: Props) {
             router.push("/user/login");
         } catch (e: any) {
             message.error("注销失败，" + e.message);
+        }
+    };
+
+    const checkIn = async () => {
+        // 请求后端执行签到
+        try {
+            const res = (await addUserSignInUsingPost({})) as any;
+            //如果res的data是true的话，显示已签到
+            if (res.data) {
+                message.success("今日已经签到过啦~请勿重复签到~");
+            } else {
+                message.success("签到成功！");
+            }
+        } catch (e: any) {
+            message.error("签到失败，" + e.message);
         }
     };
 
@@ -97,6 +114,11 @@ export default function BasicLayout({ children }: Props) {
                                 menu={{
                                     items: [
                                         {
+                                            key: "userCenter",
+                                            icon: <UserOutlined />,
+                                            label: "个人中心"
+                                        },
+                                        {
                                             key: "logout",
                                             icon: <LogoutOutlined />,
                                             label: "退出登录"
@@ -108,6 +130,8 @@ export default function BasicLayout({ children }: Props) {
                                         const { key } = event;
                                         if (key === "logout") {
                                             userLogout();
+                                        } else if (key === "userCenter") {
+                                            router.push("/user/center");
                                         }
                                     }
                                 }}
@@ -129,7 +153,18 @@ export default function BasicLayout({ children }: Props) {
                             target="_blank"
                         >
                             <GithubFilled key="GithubFilled" />
-                        </a>
+                        </a>,
+                        // 添加签到按钮，未登录时不显示
+                        loginUser.id && (
+                            <Button
+                                key="signIn"
+                                type="primary"
+                                style={{ marginLeft: 12 }}
+                                onClick={checkIn}
+                            >
+                                签到
+                            </Button>
+                        )
                     ];
                 }}
                 headerTitleRender={(logo, title, _) => {

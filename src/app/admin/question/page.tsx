@@ -1,26 +1,40 @@
 "use client";
 
 import {
+    batchDeleteQuestionsUsingPost,
     deleteQuestionUsingPost,
-    listQuestionByPageUsingPost
+    listQuestionByPageUsingPost,
+    searchQuestionSimpleVoByPageUsingPost,
+    searchQuestionVoByPageUsingPost
 } from "@/api/questionController";
 import { PlusOutlined } from "@ant-design/icons";
 import type { ActionType, ProColumns } from "@ant-design/pro-components";
 import { PageContainer, ProTable } from "@ant-design/pro-components";
-import { Button, message, Popconfirm, Space, Typography } from "antd";
+import {
+    Button,
+    message,
+    Popconfirm,
+    Space,
+    Table,
+    Tooltip,
+    Typography
+} from "antd";
 import React, { useRef, useState } from "react";
 import CreateModal from "./components/CreateModal";
 import UpdateModal from "./components/UpdateModal";
 import TagList from "../../../compoents/TagList";
 import MdEditor from "@/compoents/MdEditor";
 import UpdateBankModal from "./components/UpdateBankModal";
+import BatchAddQuestionsToBankModal from "./components/BatchAddQuestionsToBankModal";
+import BatchRemoveQuestionsFromBankModal from "./components/BatchRemoveQuestionsFromBankModal";
+import TagListBankTitles from "@/compoents/TagListBankTitles";
 
 /**
  * 题库管理页面
  *
  * @constructor
  */
-const BankAdminPage: React.FC = () => {
+const QuestionAdminPage: React.FC = () => {
     // 是否显示新建窗口
     const [createModalVisible, setCreateModalVisible] =
         useState<boolean>(false);
@@ -36,6 +50,23 @@ const BankAdminPage: React.FC = () => {
     // 是否显示更新所属题库的弹窗
     const [updateBankModalVisible, setUpdateBankModalVisible] =
         useState<boolean>(false);
+    // 是否显示批量向题库添加题目弹窗
+    const [
+        batchAddQuestionsToBankModalVisible,
+        setBatchAddQuestionsToBankModalVisible
+    ] = useState<boolean>(false);
+    // 是否显示批量从题库移除题目弹窗
+    const [
+        batchRemoveQuestionsFromBankModalVisible,
+        setBatchRemoveQuestionsFromBankModalVisible
+    ] = useState<boolean>(false);
+    // 当前选中的题目 id 列表
+    const [selectedQuestionIdList, setSelectedQuestionIdList] = useState<
+        number[]
+    >([]);
+
+    // 用于传递 onCleanSelected 函数。用于在批量操作题目后，清空批量选择状态
+    const cleanSelectedRef = useRef<(event?: MouseEvent) => void>();
 
     /**
      * 删除节点
@@ -67,31 +98,55 @@ const BankAdminPage: React.FC = () => {
     };
 
     /**
+     * 批量删除
+     * @param questionIdList
+     */
+    const handleBatchDelete = async (questionIdList: number[]) => {
+        const hide = message.loading("正在批量删除中");
+        try {
+            await batchDeleteQuestionsUsingPost({
+                questionIdList
+            });
+            hide();
+            message.success("批量删除成功");
+            actionRef?.current?.reload();
+        } catch (error: any) {
+            hide();
+            message.error("批量删除失败，" + error.message);
+        }
+    };
+
+    /**
      * 表格列配置
      */
-    const columns: ProColumns<API.Question>[] = [
+    const columns: ProColumns<API.QuestionVO>[] = [
         {
             title: "id",
             dataIndex: "id",
             valueType: "text",
-            hideInForm: true
+            hideInForm: true,
+            align: "center"
+        },
+        {
+            title: "搜索标题",
+            dataIndex: "searchText",
+            valueType: "text",
+            hideInForm: true,
+            hideInTable: true
         },
         {
             title: "标题",
             dataIndex: "title",
-            valueType: "text"
-        },
-        {
-            title: "所属题库",
-            dataIndex: "questionBankId",
-            hideInTable: true,
-            hideInForm: true
+            valueType: "text",
+            hideInSearch: true,
+            align: "center"
         },
         {
             title: "内容",
             dataIndex: "content",
             valueType: "text",
             hideInSearch: true,
+            align: "center",
             width: 240,
             //修改数据时，将此项的输入框变为markdown
             renderFormItem: (
@@ -120,6 +175,7 @@ const BankAdminPage: React.FC = () => {
             valueType: "text",
             hideInSearch: true,
             width: 640,
+            align: "center",
             //修改数据时，将此项的输入框变为markdown
             renderFormItem: (
                 _,
@@ -137,52 +193,87 @@ const BankAdminPage: React.FC = () => {
         },
         {
             title: "标签",
-            dataIndex: "tags",
+            dataIndex: "tagsList",
             valueType: "select",
             fieldProps: {
                 mode: "tags"
             },
-            //把字符串转为标签列表
             render: (_, record) => {
-                const tagList = JSON.parse(record.tags || "[]");
-                return <TagList tagList={tagList} />;
+                return <TagList tagList={record.tagList} />;
+            }
+        },
+        // 题库所属在另一张表中，这里管理员管理题目页面也使用了ES，暂时不设置根据所属题库搜索
+        {
+            title: "所属题库",
+            dataIndex: "questionBankId",
+            // hideInTable: true,
+            hideInSearch: true,
+            hideInForm: true,
+            render: (_, record) => {
+                return (
+                    <TagListBankTitles
+                        bankTitleList={record.questionBankTitles}
+                    />
+                );
             }
         },
         {
             title: "创建用户",
             dataIndex: "userId",
             valueType: "text",
-            hideInForm: true
+            align: "center",
+            width: 100,
+            hideInForm: true,
+            //设置最大宽度，超过用省略号，并设置鼠标放上去显示全部内容
+            onCell: () => {
+                return {
+                    style: {
+                        maxWidth: 150,
+                        overflow: "hidden",
+                        whiteSpace: "nowrap",
+                        textOverflow: "ellipsis",
+                        cursor: "pointer"
+                    }
+                };
+            },
+            render: (text) => (
+                <Tooltip placement="topLeft" title={text}>
+                    {text}
+                </Tooltip>
+            )
         },
-
         {
             title: "创建时间",
             sorter: true,
             dataIndex: "createTime",
             valueType: "dateTime",
             hideInSearch: true,
+            align: "center",
             hideInForm: true
         },
-        {
-            title: "编辑时间",
-            sorter: true,
-            dataIndex: "editTime",
-            valueType: "dateTime",
-            hideInSearch: true,
-            hideInForm: true
-        },
+        // {
+        //     title: "编辑时间",
+        //     sorter: true,
+        //     dataIndex: "editTime",
+        //     valueType: "dateTime",
+        //     hideInSearch: true,
+        //     hideInForm: true
+        // },
         {
             title: "更新时间",
             sorter: true,
             dataIndex: "updateTime",
             valueType: "dateTime",
             hideInSearch: true,
+            align: "center",
             hideInForm: true
         },
         {
             title: "操作",
             dataIndex: "option",
             valueType: "option",
+            align: "center",
+            width: 190,
             render: (_, record) => (
                 <Space size="middle">
                     <Typography.Link
@@ -215,12 +306,87 @@ const BankAdminPage: React.FC = () => {
     ];
     return (
         <PageContainer>
-            <ProTable<API.Question>
-                headerTitle={"查询表格"}
+            <ProTable<API.QuestionVO>
+                headerTitle={"题目详情"}
                 actionRef={actionRef}
                 rowKey="id"
                 search={{
                     labelWidth: 120
+                }}
+                rowSelection={{
+                    // 显示下拉选项。提供全选和反选
+                    selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT]
+                }}
+                tableAlertRender={({
+                    selectedRowKeys,
+                    selectedRows,
+                    onCleanSelected
+                }) => {
+                    // 将onCleanSelected函数存储到cleanSelectedRef中
+                    cleanSelectedRef.current = onCleanSelected;
+                    return (
+                        <Space size={24}>
+                            <span>
+                                已选 {selectedRowKeys.length} 项
+                                <a
+                                    style={{ marginInlineStart: 8 }}
+                                    onClick={onCleanSelected}
+                                >
+                                    取消选择
+                                </a>
+                            </span>
+                        </Space>
+                    );
+                }}
+                tableAlertOptionRender={({
+                    selectedRowKeys,
+                    selectedRows,
+                    onCleanSelected
+                }) => {
+                    return (
+                        <Space size={16}>
+                            <Button
+                                onClick={() => {
+                                    // 打开批量添加题目弹窗
+                                    setSelectedQuestionIdList(
+                                        selectedRowKeys as number[]
+                                    );
+                                    setBatchAddQuestionsToBankModalVisible(
+                                        true
+                                    );
+                                }}
+                            >
+                                批量向题库添加题目
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    // 打开批量从题库移除题目弹窗
+                                    setSelectedQuestionIdList(
+                                        selectedRowKeys as number[]
+                                    );
+                                    setBatchRemoveQuestionsFromBankModalVisible(
+                                        true
+                                    );
+                                }}
+                            >
+                                批量从题库移除题目
+                            </Button>
+                            <Popconfirm
+                                title="确认删除"
+                                description="你确定要删除这些题目么？"
+                                onConfirm={() => {
+                                    // 批量删除题目
+                                    handleBatchDelete(
+                                        selectedRowKeys as number[]
+                                    );
+                                }}
+                                okText="Yes"
+                                cancelText="No"
+                            >
+                                <Button danger>批量删除题目</Button>
+                            </Popconfirm>
+                        </Space>
+                    );
                 }}
                 toolBarRender={() => [
                     <Button
@@ -234,8 +400,8 @@ const BankAdminPage: React.FC = () => {
                     </Button>
                 ]}
                 request={async (params, sort, filter) => {
-                    const sortField = Object.keys(sort)?.[0];
-                    const sortOrder = sort?.[sortField] ?? undefined;
+                    const sortField = Object.keys(sort)?.[0] || "updateTime";
+                    const sortOrder = sort?.[sortField] || "descend";
 
                     //如果当前页的数据已经删除完了，则查询上一页
                     if (currentPage) {
@@ -243,12 +409,13 @@ const BankAdminPage: React.FC = () => {
                         setCurrentPage(false);
                     }
 
-                    const { data, code } = (await listQuestionByPageUsingPost({
-                        ...params,
-                        sortField,
-                        sortOrder,
-                        ...filter
-                    } as API.QuestionQueryRequest)) as any;
+                    const { data, code } =
+                        (await searchQuestionVoByPageUsingPost({
+                            ...params,
+                            sortField,
+                            sortOrder,
+                            ...filter
+                        } as API.QuestionQueryRequest)) as any;
                     setCurrentPageTotal(Number(data?.total) || 0); // 设置当前页的数据总数
                     return {
                         success: code === 0,
@@ -280,6 +447,7 @@ const BankAdminPage: React.FC = () => {
                 }}
                 onCancel={() => {
                     setUpdateModalVisible(false);
+                    actionRef?.current?.reload();
                 }}
             />
             <UpdateBankModal
@@ -288,9 +456,37 @@ const BankAdminPage: React.FC = () => {
                 onCancel={() => {
                     setCurrentRow(undefined);
                     setUpdateBankModalVisible(false);
+                    actionRef?.current?.reload();
+                }}
+            />
+            <BatchAddQuestionsToBankModal
+                visible={batchAddQuestionsToBankModalVisible}
+                questionIdList={selectedQuestionIdList}
+                onSubmit={() => {
+                    setBatchAddQuestionsToBankModalVisible(false);
+                    actionRef?.current?.reload();
+                    // 调用存储的onCleanSelected函数来清空选择
+                    cleanSelectedRef.current?.();
+                }}
+                onCancel={() => {
+                    setBatchAddQuestionsToBankModalVisible(false);
+                    actionRef?.current?.reload();
+                }}
+            />
+            <BatchRemoveQuestionsFromBankModal
+                visible={batchRemoveQuestionsFromBankModalVisible}
+                questionIdList={selectedQuestionIdList}
+                onSubmit={() => {
+                    setBatchRemoveQuestionsFromBankModalVisible(false);
+                    actionRef?.current?.reload();
+                    cleanSelectedRef.current?.();
+                }}
+                onCancel={() => {
+                    setBatchRemoveQuestionsFromBankModalVisible(false);
+                    actionRef?.current?.reload();
                 }}
             />
         </PageContainer>
     );
 };
-export default BankAdminPage;
+export default QuestionAdminPage;

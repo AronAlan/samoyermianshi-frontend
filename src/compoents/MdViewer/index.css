@@ -1,6 +1,8 @@
-.bytemd-toolbar-icon.bytemd-tippy.bytemd-tippy-right:last-child {
-    display: none;
-}
-.bytemd-toolbar-icon.bytemd-tippy.bytemd-tippy-right:nth-child(5) {
-    display: none;
+.md-viewer {
+    .bytemd-toolbar-icon.bytemd-tippy.bytemd-tippy-right:last-child {
+        display: none;
+    }
+    .bytemd-toolbar-icon.bytemd-tippy.bytemd-tippy-right:nth-child(5) {
+        display: none;
+    }
 }

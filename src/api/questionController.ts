@@ -32,6 +32,21 @@ export async function deleteQuestionUsingPost(
   });
 }
 
+/** batchDeleteQuestions POST /api/question/delete/batch */
+export async function batchDeleteQuestionsUsingPost(
+  body: API.QuestionBatchDeleteRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseBoolean_>('/api/question/delete/batch', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** editQuestion POST /api/question/edit */
 export async function editQuestionUsingPost(
   body: API.QuestionEditRequest,
@@ -113,6 +128,36 @@ export async function listMyQuestionVoByPageUsingPost(
   options?: { [key: string]: any },
 ) {
   return request<API.BaseResponsePageQuestionVO_>('/api/question/my/list/page/vo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** searchQuestionSimpleVOByPage POST /api/question/search/page/svo */
+export async function searchQuestionSimpleVoByPageUsingPost(
+  body: API.QuestionQueryRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponsePageQuestionSimpleVO_>('/api/question/search/page/svo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** searchQuestionVOByPage POST /api/question/search/page/vo */
+export async function searchQuestionVoByPageUsingPost(
+  body: API.QuestionQueryRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponsePageQuestionVO_>('/api/question/search/page/vo', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
